@@ -38,6 +38,7 @@ module.exports = {
       'styles': __dirname + '/src/styles',
       'mixins': __dirname + '/src/mixins',
       'components': __dirname + '/src/components/',
+      'constants': __dirname + '/src/constants/',
       'stores': __dirname + '/src/stores/',
       'actions': __dirname + '/src/actions/'
     }

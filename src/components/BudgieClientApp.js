@@ -3,17 +3,21 @@
 var React = require('react/addons');
 
 // Stores
-require('../stores/AccountStore');
-require('../stores/TransactionStore');
+var AccountStore = require('stores/AccountStore');
+var TransactionStore = require('stores/TransactionStore');
 
 // CSS
 require('normalize.css');
-require('../styles/main.css');
+require('styles/main.css');
 
 var BudgieClientApp = React.createClass({
+  fetchData: function() {
+    AccountStore.fetchData();
+  },
+
   render: function() {
     return (
-      <div className='main'>
+      <div className='main' onClick={this.fetchData}>
         Hello Budgie.
       </div>
     );

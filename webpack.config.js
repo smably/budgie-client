@@ -17,6 +17,9 @@ module.exports = {
   cache: true,
   debug: true,
   devtool: false,
+  devServer: {
+    headers: { "Access-Control-Allow-Origin": "*" }
+  },
   entry: [
       'webpack/hot/only-dev-server',
       './src/components/main.js'
@@ -33,6 +36,8 @@ module.exports = {
       'styles': __dirname + '/src/styles',
       'mixins': __dirname + '/src/mixins',
       'components': __dirname + '/src/components/',
+      'constants': __dirname + '/src/constants/',
+      'records': __dirname + '/src/records/',
       'stores': __dirname + '/src/stores/',
       'actions': __dirname + '/src/actions/'
     }
