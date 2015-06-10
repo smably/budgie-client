@@ -2,11 +2,25 @@
 
 var Reflux = require('reflux');
 
-var AccountActionCreators  =  Reflux.createActions([
+var Constants = require('constants/BaseConstants');
+
+var Ajax = require('superagent');
+var prefix = require('superagent-prefix')(Constants.API_BASE);
+
+var AccountActions = Reflux.createActions([
   'load',
   'addAccount',
   'removeAccount',
   'updateAccount'
 ]);
 
-module.exports = AccountActionCreators;
+AccountActions.addAccount.preEmit = function (account) {
+  console.log("About to send out AJAX request for", account.toJS());
+
+  Ajax.post('/accounts')
+  .use(prefix)
+  .send(account.toJS())
+  .end(function (err, res) {});
+};
+
+module.exports = AccountActions;

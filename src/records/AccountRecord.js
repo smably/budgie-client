@@ -3,6 +3,7 @@
 var Immutable = require('immutable');
 
 var AccountRecord = Immutable.Record({
+  id: null,
   label: null,
   isSource: false,
   isDestination: false,
