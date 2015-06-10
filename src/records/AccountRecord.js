@@ -7,13 +7,12 @@ var AccountRecord = Immutable.Record({
   isSource: false,
   isDestination: false,
   isPrimary: false,
-  accountInfo: {
-    institutionName: null,
-    accountType: null,
-    accountNumber: null,
-    balance: 0,
-    balanceDate: null
-  }
+  hasExtraInfo: false,
+  institutionName: null,
+  type: null,
+  number: null,
+  balance: 0,
+  balanceDate: null
 });
 
 module.exports = AccountRecord;

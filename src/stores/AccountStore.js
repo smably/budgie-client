@@ -2,7 +2,7 @@
 
 var Reflux = require('reflux');
 
-var Actions = require('actions/AccountActionCreators');
+var Actions = require('actions/AccountActions');
 var Constants = require('constants/BaseConstants');
 var Account = require('records/AccountRecord');
 
@@ -10,30 +10,35 @@ var Ajax = require('superagent');
 var prefix = require('superagent-prefix')(Constants.API_BASE);
 
 var AccountStore = Reflux.createStore({
-  listenables: Actions,
+  listenables: [Actions],
 
-  accountList: [],
+  accounts: [],
+
+  init: function() {
+    this.listenTo(Actions.load, this.fetchData);
+  },
 
   fetchData: function() {
-    var scope = this;
-
     Ajax.get('/accounts')
     .use(prefix)
     .end(function(err, res) {
       if (err) {
         console.log("Error fetching:", err);
       } else {
-        var accounts = JSON.parse(res.text);
+        var rawAccounts = JSON.parse(res.text);
+        var accounts = [];
 
-        console.log("Got accounts:", accounts);
+        // FIXME
+        //console.log("Got accounts:", rawAccounts);
 
-        accounts.map(function (account) {
-          scope.accountList.push(new Account(account));
+        rawAccounts.map(function (account) {
+          accounts.push(new Account(account));
         });
 
-        console.log(scope.accountList[0]);
+        this.accounts = accounts;
+        this.trigger(this.accounts);
       }
-    });
+    }.bind(this));
   }
 
 });
