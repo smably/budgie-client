@@ -39,6 +39,23 @@ var AccountStore = Reflux.createStore({
         this.trigger(this.accounts);
       }
     }.bind(this));
+  },
+
+  onAddAccountSuccess: function(account) {
+    this.updateAccounts(this.accounts.concat([account]));
+  },
+
+  onRemoveAccountSuccess: function(accountId) {
+    var filteredAccounts = this.accounts.filter(function(account) {
+      return account.id !== accountId;
+    });
+
+    this.updateAccounts(filteredAccounts);
+  },
+
+  updateAccounts: function(accounts) {
+    this.accounts = accounts;
+    this.trigger(accounts);
   }
 
 });

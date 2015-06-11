@@ -2,9 +2,15 @@
 
 var React = require('react/addons');
 
+var Actions = require('actions/AccountActions');
+
 var Account = React.createClass({
-  deleteAccount: function() {
-    window.alert("TODO");
+  removeAccount: function() {
+    if (this.props.data.id) {
+      Actions.removeAccount(this.props.data.id);
+    } else {
+      console.log("Can't delete! No ID found for account.");
+    }
   },
 
   render: function() {
@@ -30,7 +36,7 @@ var Account = React.createClass({
         <td>{account.isDestination ? "x" : "-"}</td>
         <td>{account.isPrimary ? "x" : "-"}</td>
         {accountInfo}
-        <td><input type="button" value="-" onClick={this.deleteAccount}/></td>
+        <td><input type="button" value="-" onClick={this.removeAccount}/></td>
       </tr>
     );
   }
