@@ -1,24 +1,20 @@
 'use strict';
 
 var React = require('react/addons');
-var Reflux = require('reflux');
 
-// Stores
-var AccountStore = require('stores/AccountStore');
+var Router = require('react-router');
+var RouteHandler = Router.RouteHandler;
 
-// Components
-var AccountList = require('components/AccountList');
-
-// CSS
 require('normalize.css');
 require('styles/main.css');
 
 var BudgieClientApp = React.createClass({
-  mixins: [Reflux.connect(AccountStore, "accounts")],
-
   render: function() {
     return (
-      <AccountList accounts={this.state.accounts} />
+      <div>
+        <h1>Budgie</h1>
+        <RouteHandler {...this.props}/>
+      </div>
     );
   }
 });

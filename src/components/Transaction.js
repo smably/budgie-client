@@ -7,7 +7,7 @@ var Link = Router.Link;
 
 var Actions = require('actions/AccountActions');
 
-var Account = React.createClass({
+var Transaction = React.createClass({
   removeAccount: function() {
     if (this.props.data.id) {
       Actions.removeAccount(this.props.data.id);
@@ -49,4 +49,4 @@ var Account = React.createClass({
   }
 });
 
-module.exports = Account;
+module.exports = Transaction;
