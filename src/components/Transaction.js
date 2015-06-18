@@ -24,10 +24,9 @@ var Transaction = React.createClass({
         <td>{transaction.date}</td>
         <td>{transaction.label}</td>
         <td>{transaction.amount}</td>
-        <td>{transaction.fromAccount}</td>
-        <td>{transaction.toAccount}</td>
-        <td>$0.00</td>
-        <td>$0.00</td>
+        <td><Link to="accountTransactions" params={{id: transaction.sourceAccountId}}>Source</Link></td>
+        <td><Link to="accountTransactions" params={{id: transaction.destinationAccountId}}>Destination</Link></td>
+        <td><input type="button" value="-" onClick={this.removeTransaction}/></td>
       </tr>
     );
   }

@@ -39,7 +39,25 @@ var TransactionStore = Reflux.createStore({
         this.trigger(this.transactions);
       }
     }.bind(this));
+  },
+
+  onAddTransactionSuccess: function(transaction) {
+    this.updateTransactions(this.transactions.concat([transaction]));
+  },
+
+  onRemoveTransactionSuccess: function(transactionId) {
+    var filteredTransactions = this.transactions.filter(function(transaction) {
+      return transaction.id !== transactionId;
+    });
+
+    this.updateTransactions(filteredTransactions);
+  },
+
+  updateTransactions: function(transactions) {
+    this.transactions = transactions;
+    this.trigger(transactions);
   }
+
 });
 
 module.exports = TransactionStore;

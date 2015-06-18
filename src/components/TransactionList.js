@@ -5,6 +5,7 @@ var React = require('react/addons');
 var TransactionActions = require('actions/TransactionActions');
 
 var Transaction = require('components/Transaction');
+var AddTransactionForm = require('components/AddTransactionForm');
 
 var TransactionList = React.createClass({
   componentDidMount: function () {
@@ -41,12 +42,12 @@ var TransactionList = React.createClass({
             <th>Date</th>
             <th>Transaction</th>
             <th>Amount</th>
-            <th>To Account</th>
             <th>From Account</th>
-            <th>Balance: Primary</th>
-            <th>(Balance: other accounts)</th>
+            <th>To Account</th>
+            <th>+/-</th>
           </tr>
           {transactionRows}
+          <AddTransactionForm/>
         </tbody>
       </table>
     );
