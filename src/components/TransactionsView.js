@@ -16,7 +16,10 @@ var TransactionsView = React.createClass({
     console.log(this.props);
 
     return (
-      <h2>TODO</h2>
+      <div>
+        <h2>Transactions</h2>
+        <TransactionList transactions={this.state.transactions} />
+      </div>
     );
   }
 });

@@ -14,7 +14,7 @@ var TransactionList = React.createClass({
   renderTransactionRows: function() {
     var transactionRows = [];
 
-    if (this.props.transactions) {
+    if (this.props.transactions && this.props.transactions.length > 0) {
       this.props.transactions.forEach(function(transaction) {
         transactionRows.push(
           <Transaction key={transaction.id} data={transaction}/>

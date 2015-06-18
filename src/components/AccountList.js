@@ -17,7 +17,7 @@ var AccountList = React.createClass({
 
     console.log("in renderAccountRows, this.props.accounts=", this.props.accounts);
 
-    if (this.props.accounts) {
+    if (this.props.accounts && this.props.accounts.length > 0) {
       this.props.accounts.forEach(function(account) {
         accountRows.push(
           <Account key={account.id} data={account}/>
