@@ -26,6 +26,6 @@ var Routes = (
 );
 
 // TODO switch to HistoryLocation
-Router.run(Routes, Router.HashLocation, function (Handler) {
-  React.render(<Handler/>, content);
+Router.run(Routes, Router.HashLocation, function(Handler, state) {
+  React.render(<Handler {...state}/>, content);
 });

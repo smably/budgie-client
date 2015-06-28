@@ -6,7 +6,7 @@ var Reflux = require('reflux');
 var AccountStore = require('stores/AccountStore');
 var TransactionStore = require('stores/TransactionStore');
 
-var AccountList = require('components/AccountList');
+var TransactionList = require('components/TransactionList');
 
 var AccountTransactionsView = React.createClass({
   mixins: [
@@ -15,10 +15,11 @@ var AccountTransactionsView = React.createClass({
   ],
 
   render: function() {
-    console.log(this.props);
-
     return (
-      <h2>TODO</h2>
+      <div>
+        <h2>Transactions</h2>
+        <TransactionList accountId={this.props.params.id} transactions={this.state.transactions} />
+      </div>
     );
   }
 });
