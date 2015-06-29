@@ -2,26 +2,41 @@
 
 var React = require('react/addons');
 
-var TransactionActions = require('actions/TransactionActions');
-
 var Transaction = require('components/Transaction');
 var AddTransactionForm = require('components/AddTransactionForm');
 
 var TransactionList = React.createClass({
-  componentDidMount: function () {
-    TransactionActions.load();
-  },
-
   renderTransactionRows: function() {
     var transactionRows = [];
 
     if (this.props.transactions && this.props.transactions.length > 0) {
-      this.props.transactions.forEach(function(transaction) {
-        transactionRows.push(
-          <Transaction key={transaction.id} data={transaction}/>
+      if (this.props.account) {
+        var accountBalance = 0;
+        var self = this;
+
+        this.props.transactions.filter(
+          function(transaction) {
+            return transaction.sourceAccountId === self.props.account.id ||
+              transaction.destinationAccountId === self.props.account.id;
+          }
+        ).forEach(
+          function(transaction) {
+            //accountBalance = self.incrementAccountBalance(accountBalance, transaction);
+            transactionRows.push(
+              <Transaction key={transaction.id} data={transaction} balance={accountBalance}/>
+            );
+          }
         );
-      });
-    } else {
+      } else {
+        this.props.transactions.forEach(function(transaction) {
+          transactionRows.push(
+            <Transaction key={transaction.id} data={transaction}/>
+          );
+        });
+      }
+    }
+
+    if (transactionRows.length === 0) {
       transactionRows = (
         <tr>
           <td colSpan="7">No transactions found!</td>
@@ -30,6 +45,11 @@ var TransactionList = React.createClass({
     }
 
     return transactionRows;
+  },
+
+  incrementAccountBalance: function(accountBalance, transaction) {
+    // FIXME
+    return true;
   },
 
   render: function() {

@@ -28,9 +28,6 @@ var AccountStore = Reflux.createStore({
         var rawAccounts = JSON.parse(res.text);
         var accounts = [];
 
-        // FIXME
-        //console.log("Got accounts:", rawAccounts);
-
         rawAccounts.map(function (account) {
           accounts.push(new Account(account));
         });

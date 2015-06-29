@@ -2,16 +2,10 @@
 
 var React = require('react/addons');
 
-var AccountActions = require('actions/AccountActions');
-
 var Account = require('components/Account');
 var AddAccountForm = require('components/AddAccountForm');
 
 var AccountList = React.createClass({
-  componentDidMount: function () {
-    AccountActions.load();
-  },
-
   renderAccountRows: function() {
     var accountRows = [];
 
