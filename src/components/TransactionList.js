@@ -6,11 +6,33 @@ var Transaction = require('components/Transaction');
 var AddTransactionForm = require('components/AddTransactionForm');
 
 var TransactionList = React.createClass({
-  renderTransactionRows: function() {
+  renderTransactionHeader: function(hasBalance) {
+    var balanceHeader;
+
+    if (hasBalance) {
+      balanceHeader = (
+        <th>Balance</th>
+      );
+    }
+
+    return (
+      <tr>
+        <th>Date</th>
+        <th>Transaction</th>
+        <th>Amount</th>
+        <th>From Account</th>
+        <th>To Account</th>
+        {balanceHeader}
+        <th>+/-</th>
+      </tr>
+    );
+  },
+
+  renderTransactionRows: function(hasBalance) {
     var transactionRows = [];
 
     if (this.props.transactions && this.props.transactions.length > 0) {
-      if (this.props.account) {
+      if (hasBalance) {
         var accountBalance = 0;
         var self = this;
 
@@ -21,7 +43,7 @@ var TransactionList = React.createClass({
           }
         ).forEach(
           function(transaction) {
-            //accountBalance = self.incrementAccountBalance(accountBalance, transaction);
+            accountBalance = self.incrementAccountBalance(accountBalance, transaction);
             transactionRows.push(
               <Transaction key={transaction.id} data={transaction} balance={accountBalance}/>
             );
@@ -48,26 +70,30 @@ var TransactionList = React.createClass({
   },
 
   incrementAccountBalance: function(accountBalance, transaction) {
-    // FIXME
-    return true;
+    var newBalance = accountBalance;
+
+    if (this.props.account.id === transaction.sourceAccountId) {
+      newBalance -= transaction.amount;
+    }
+
+    if (this.props.account.id === transaction.destinationAccountId) {
+      newBalance += transaction.amount;
+    }
+
+    return newBalance;
   },
 
   render: function() {
-    var transactionRows = this.renderTransactionRows();
+    var hasBalance = this.props.account && true;
+    var transactionHeader = this.renderTransactionHeader(hasBalance);
+    var transactionRows = this.renderTransactionRows(hasBalance);
 
     return (
       <table className='main'>
         <tbody>
-          <tr>
-            <th>Date</th>
-            <th>Transaction</th>
-            <th>Amount</th>
-            <th>From Account</th>
-            <th>To Account</th>
-            <th>+/-</th>
-          </tr>
+          {transactionHeader}
           {transactionRows}
-          <AddTransactionForm/>
+          <AddTransactionForm hasBalance={hasBalance}/>
         </tbody>
       </table>
     );

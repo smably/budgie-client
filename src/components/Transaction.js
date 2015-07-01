@@ -7,6 +7,8 @@ var Link = Router.Link;
 
 var Actions = require('actions/TransactionActions');
 
+var DollarView = require('components/DollarView');
+
 var Transaction = React.createClass({
   removeTransaction: function() {
     if (this.props.data.id) {
@@ -18,6 +20,13 @@ var Transaction = React.createClass({
 
   render: function() {
     var transaction = this.props.data;
+    var balanceCell;
+
+    if (this.props.balance) {
+      balanceCell = (
+        <td><DollarView amount={this.props.balance}/></td>
+      );
+    }
 
     return (
       <tr>
@@ -26,6 +35,7 @@ var Transaction = React.createClass({
         <td>{transaction.amount}</td>
         <td><Link to="accountTransactions" params={{id: transaction.sourceAccountId}}>Source</Link></td>
         <td><Link to="accountTransactions" params={{id: transaction.destinationAccountId}}>Destination</Link></td>
+        {balanceCell}
         <td><input type="button" value="-" onClick={this.removeTransaction}/></td>
       </tr>
     );

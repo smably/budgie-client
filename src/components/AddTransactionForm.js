@@ -52,6 +52,14 @@ var AddTransactionForm = React.createClass({
   },
 
   render: function() {
+    var balanceCell;
+
+    if (this.props.hasBalance) {
+      balanceCell = (
+        <td></td>
+      );
+    }
+
     return (
       <tr>
         <td><input placeholder="Date" name="date" value={this.state.date} onChange={this.updateTransaction}/></td>
@@ -59,6 +67,7 @@ var AddTransactionForm = React.createClass({
         <td><input placeholder="Amount" name="amount" value={this.state.amount} onChange={this.updateTransaction}/></td>
         <td><input placeholder="From Account (ID)" name="sourceAccountId" value={this.state.sourceAccountId} onChange={this.updateTransaction}/></td>
         <td><input placeholder="To Account (ID)" name="destinationAccountId" value={this.state.destinationAccountId} onChange={this.updateTransaction}/></td>
+        {balanceCell}
         <td><input type="submit" value="+" onClick={this.addTransaction}/></td>
       </tr>
     );
