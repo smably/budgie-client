@@ -32,7 +32,7 @@ var Transaction = React.createClass({
       <tr>
         <td>{transaction.date}</td>
         <td>{transaction.label}</td>
-        <td>{transaction.amount}</td>
+        <td><DollarView amount={transaction.amount} isNegative={this.props.isNegative}/></td>
         <td><Link to="accountTransactions" params={{id: transaction.sourceAccountId}}>Source</Link></td>
         <td><Link to="accountTransactions" params={{id: transaction.destinationAccountId}}>Destination</Link></td>
         {balanceCell}

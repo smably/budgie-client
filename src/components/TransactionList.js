@@ -34,6 +34,7 @@ var TransactionList = React.createClass({
     if (this.props.transactions && this.props.transactions.length > 0) {
       if (hasBalance) {
         var accountBalance = 0;
+        var isOutgoing = false;
         var self = this;
 
         this.props.transactions.filter(
@@ -44,8 +45,10 @@ var TransactionList = React.createClass({
         ).forEach(
           function(transaction) {
             accountBalance = self.incrementAccountBalance(accountBalance, transaction);
+            isOutgoing = self.isOutgoing(transaction);
+
             transactionRows.push(
-              <Transaction key={transaction.id} data={transaction} balance={accountBalance}/>
+              <Transaction key={transaction.id} data={transaction} balance={accountBalance} isNegative={isOutgoing}/>
             );
           }
         );
@@ -72,15 +75,17 @@ var TransactionList = React.createClass({
   incrementAccountBalance: function(accountBalance, transaction) {
     var newBalance = accountBalance;
 
-    if (this.props.account.id === transaction.sourceAccountId) {
+    if (this.isOutgoing(transaction)) {
       newBalance -= transaction.amount;
-    }
-
-    if (this.props.account.id === transaction.destinationAccountId) {
+    } else {
       newBalance += transaction.amount;
     }
 
     return newBalance;
+  },
+
+  isOutgoing: function(transaction) {
+    return this.props.account.id === transaction.sourceAccountId;
   },
 
   render: function() {
