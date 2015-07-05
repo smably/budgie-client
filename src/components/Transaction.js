@@ -23,6 +23,12 @@ var Transaction = React.createClass({
   render: function() {
     var transaction = this.props.data;
     var balanceCell;
+    var sourceLabel = this.props.sourceAccount ?
+      this.props.sourceAccount.label :
+      "(unknown)";
+    var destinationLabel = this.props.destinationAccount ?
+      this.props.destinationAccount.label :
+      "(unknown)";
 
     if (this.props.balance) {
       balanceCell = (
@@ -35,8 +41,8 @@ var Transaction = React.createClass({
         <td>{moment(transaction.date).format('MMMM D, YYYY')}</td>
         <td>{transaction.label}</td>
         <td><DollarView amount={transaction.amount} isNegative={this.props.isNegative}/></td>
-        <td><Link to="accountTransactions" params={{id: transaction.sourceAccountId}}>Source</Link></td>
-        <td><Link to="accountTransactions" params={{id: transaction.destinationAccountId}}>Destination</Link></td>
+        <td><Link to="accountTransactions" params={{id: transaction.sourceAccountId}}>{sourceLabel}</Link></td>
+        <td><Link to="accountTransactions" params={{id: transaction.destinationAccountId}}>{destinationLabel}</Link></td>
         {balanceCell}
         <td><input type="button" value="-" onClick={this.removeTransaction}/></td>
       </tr>

@@ -39,14 +39,20 @@ var TransactionStore = Reflux.createStore({
           if (rawTransaction.isRecurring) {
             options = RRule.parseString(rawTransaction.rrule);
 
-            options.dtstart = new Date(options.dtstart.getTime() + (options.dtstart.getTimezoneOffset() * 60 * 1000));
+            // NOTE: dtstart is IGNORED! Do not use it!!
+            options.dtstart = new Date(rawTransaction.date);
 
             dates = new RRule(options).between(begin.toDate(), end.toDate(), true);
+
+            // TODO handle rdate and exdate
+            // Need to parse them into a list, add rdate entries, remove exdate entries
+            // Maybe sort?
 
             dates.forEach(function(date) {
               var transaction = new Transaction(rawTransaction);
 
               transaction = transaction.withMutations(function(mutableTransaction) {
+                mutableTransaction.set("uniqueId", date.getTime() + mutableTransaction.id);
                 mutableTransaction.set("date", date.toJSON());
                 mutableTransaction.set("rrule", null);
               });
@@ -54,10 +60,15 @@ var TransactionStore = Reflux.createStore({
               transactions.push(transaction);
             });
 
-            // TODO handle rdate and exdate
-
           } else {
-            transactions.push(new Transaction(rawTransaction));
+            var date = new Date(rawTransaction.date);
+            var transaction = new Transaction(rawTransaction);
+
+            transaction = transaction.withMutations(function(mutableTransaction) {
+              mutableTransaction.set("uniqueId", date.getTime() + mutableTransaction.id);
+            });
+
+            transactions.push(transaction);
           }
         });
 

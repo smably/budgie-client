@@ -2,10 +2,24 @@
 
 var React = require('react/addons');
 
+var Immutable = require('immutable');
+
 var Transaction = require('components/Transaction');
 var AddTransactionForm = require('components/AddTransactionForm');
 
 var TransactionList = React.createClass({
+  accountMap: null,
+
+  componentWillReceiveProps: function(newProps) {
+    if (newProps.accounts) {
+      this.accountMap = Immutable.Map().withMutations(function(mutableAccountMap) {
+        newProps.accounts.forEach(function(account) {
+          mutableAccountMap.set(account.id, account);
+        });
+      });
+    }
+  },
+
   renderTransactionHeader: function(hasBalance) {
     var balanceHeader;
 
@@ -33,29 +47,39 @@ var TransactionList = React.createClass({
 
     if (this.props.transactions && this.props.transactions.length > 0) {
       if (hasBalance) {
+        var sourceAccount, destinationAccount;
         var accountBalance = 0;
         var isOutgoing = false;
         var self = this;
 
         this.props.transactions.filter(
           function(transaction) {
-            return transaction.sourceAccountId === self.props.account.id ||
-              transaction.destinationAccountId === self.props.account.id;
+            return transaction.sourceAccountId === self.props.accountId ||
+              transaction.destinationAccountId === self.props.accountId;
           }
         ).forEach(
           function(transaction) {
             accountBalance = self.incrementAccountBalance(accountBalance, transaction);
             isOutgoing = self.isOutgoing(transaction);
+            sourceAccount = self.accountMap.get(transaction.sourceAccountId);
+            destinationAccount = self.accountMap.get(transaction.destinationAccountId);
 
             transactionRows.push(
-              <Transaction key={new Date(transaction.date).getTime() + transaction.id} data={transaction} balance={accountBalance} isNegative={isOutgoing}/>
+              <Transaction
+                key={transaction.uniqueId}
+                data={transaction}
+                sourceAccount={sourceAccount}
+                destinationAccount={destinationAccount}
+                balance={accountBalance}
+                isNegative={isOutgoing}
+                />
             );
           }
         );
       } else {
         this.props.transactions.forEach(function(transaction) {
           transactionRows.push(
-            <Transaction key={new Date(transaction.date).getTime() + transaction.id} data={transaction}/>
+            <Transaction key={transaction.uniqueId} data={transaction}/>
           );
         });
       }
@@ -85,11 +109,11 @@ var TransactionList = React.createClass({
   },
 
   isOutgoing: function(transaction) {
-    return this.props.account.id === transaction.sourceAccountId;
+    return this.props.accountId === transaction.sourceAccountId;
   },
 
   render: function() {
-    var hasBalance = this.props.account && true;
+    var hasBalance = this.props.accountId && true;
     var transactionHeader = this.renderTransactionHeader(hasBalance);
     var transactionRows = this.renderTransactionRows(hasBalance);
 

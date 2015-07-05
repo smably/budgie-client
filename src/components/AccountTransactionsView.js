@@ -26,21 +26,12 @@ var AccountTransactionsView = React.createClass({
     var transactionList;
 
     if (this.state.accounts) {
-      var self = this;
-
-      this.state.accounts.some(function(account) {
-        if (account.id === self.props.params.id) {
-          transactionList = (
-            <TransactionList account={account} transactions={self.state.transactions} />
-          );
-          return true;
-        } else {
-          return false;
-        }
-      });
+      transactionList = (
+        <TransactionList accountId={this.props.params.id} accounts={this.state.accounts} transactions={this.state.transactions} />
+      );
     } else {
       transactionList = (
-        <TransactionList transactions={this.state.transactions} />
+        <TransactionList accounts={this.state.accounts} transactions={this.state.transactions} />
       );
     }
 

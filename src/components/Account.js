@@ -7,6 +7,8 @@ var Link = Router.Link;
 
 var Actions = require('actions/AccountActions');
 
+var DollarView = require('components/DollarView');
+
 var Account = React.createClass({
   removeAccount: function() {
     if (this.props.data.id) {
@@ -26,7 +28,7 @@ var Account = React.createClass({
       accountInfo = [
         <td key={account.id + "-institutionName"}>{account.institutionName}</td>,
         <td key={account.id + "-typeAndNumber"}>{account.type} {account.number}</td>,
-        <td key={account.id + "-balance"}>{account.balance}</td>
+        <td key={account.id + "-balance"}><DollarView amount={account.balance}/></td>
       ];
     } else {
       accountInfo = [
