@@ -2,6 +2,8 @@
 
 var React = require('react/addons');
 
+var moment = require('moment');
+
 var Router = require('react-router');
 var Link = Router.Link;
 
@@ -30,7 +32,7 @@ var Transaction = React.createClass({
 
     return (
       <tr>
-        <td>{transaction.date}</td>
+        <td>{moment(transaction.date).format('MMMM D, YYYY')}</td>
         <td>{transaction.label}</td>
         <td><DollarView amount={transaction.amount} isNegative={this.props.isNegative}/></td>
         <td><Link to="accountTransactions" params={{id: transaction.sourceAccountId}}>Source</Link></td>

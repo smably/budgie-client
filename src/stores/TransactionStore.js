@@ -8,6 +8,8 @@ var Transaction = require('records/TransactionRecord');
 
 var Ajax = require('superagent');
 var prefix = require('superagent-prefix')(Constants.API_BASE);
+var RRule = require('rrule');
+var moment = require('moment');
 
 var TransactionStore = Reflux.createStore({
   listenables: Actions,
@@ -27,12 +29,36 @@ var TransactionStore = Reflux.createStore({
       } else {
         var rawTransactions = JSON.parse(res.text);
         var transactions = [];
+        var options;
+        var dates;
 
-        // FIXME
-        //console.log("Got transactions:", rawTransactions);
+        var begin = moment().startOf('day').subtract(1, 'years');
+        var end = moment().startOf('day').add(1, 'years');
 
-        rawTransactions.map(function (transaction) {
-          transactions.push(new Transaction(transaction));
+        rawTransactions.map(function (rawTransaction) {
+          if (rawTransaction.isRecurring) {
+            options = RRule.parseString(rawTransaction.rrule);
+
+            options.dtstart = new Date(options.dtstart.getTime() + (options.dtstart.getTimezoneOffset() * 60 * 1000));
+
+            dates = new RRule(options).between(begin.toDate(), end.toDate(), true);
+
+            dates.forEach(function(date) {
+              var transaction = new Transaction(rawTransaction);
+
+              transaction = transaction.withMutations(function(mutableTransaction) {
+                mutableTransaction.set("date", date.toJSON());
+                mutableTransaction.set("rrule", null);
+              });
+
+              transactions.push(transaction);
+            });
+
+            // TODO handle rdate and exdate
+
+          } else {
+            transactions.push(new Transaction(rawTransaction));
+          }
         });
 
         this.transactions = transactions;

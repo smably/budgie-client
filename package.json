@@ -16,7 +16,9 @@
     "normalize.css": "~3.0.3",
     "superagent": "^1.2.0",
     "superagent-prefix": "0.0.2",
-    "immutable": "^3.7.3"
+    "immutable": "^3.7.3",
+    "rrule": "^2.1.0",
+    "moment": "^2.10.3"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
