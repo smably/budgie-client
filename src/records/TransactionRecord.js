@@ -3,6 +3,7 @@
 var Immutable = require('immutable');
 
 var TransactionRecord = Immutable.Record({
+  id: null,
   date: null,
   isReconciled: false,
   isRecurring: false,

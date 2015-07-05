@@ -48,14 +48,14 @@ var TransactionList = React.createClass({
             isOutgoing = self.isOutgoing(transaction);
 
             transactionRows.push(
-              <Transaction key={transaction.id} data={transaction} balance={accountBalance} isNegative={isOutgoing}/>
+              <Transaction key={new Date(transaction.date).getTime() + transaction.id} data={transaction} balance={accountBalance} isNegative={isOutgoing}/>
             );
           }
         );
       } else {
         this.props.transactions.forEach(function(transaction) {
           transactionRows.push(
-            <Transaction key={transaction.id} data={transaction}/>
+            <Transaction key={new Date(transaction.date).getTime() + transaction.id} data={transaction}/>
           );
         });
       }
