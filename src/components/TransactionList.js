@@ -37,7 +37,7 @@ var TransactionList = React.createClass({
         <th>From Account</th>
         <th>To Account</th>
         {balanceHeader}
-        <th>+/-</th>
+        <th></th>
       </tr>
     );
   },
@@ -66,7 +66,7 @@ var TransactionList = React.createClass({
 
             transactionRows.push(
               <Transaction
-                key={transaction.uniqueId}
+                key={transaction.sortId}
                 data={transaction}
                 sourceAccount={sourceAccount}
                 destinationAccount={destinationAccount}
@@ -79,7 +79,7 @@ var TransactionList = React.createClass({
       } else {
         this.props.transactions.forEach(function(transaction) {
           transactionRows.push(
-            <Transaction key={transaction.uniqueId} data={transaction}/>
+            <Transaction key={transaction.sortId} data={transaction}/>
           );
         });
       }
@@ -122,7 +122,6 @@ var TransactionList = React.createClass({
         <tbody>
           {transactionHeader}
           {transactionRows}
-          <AddTransactionForm hasBalance={hasBalance}/>
         </tbody>
       </table>
     );

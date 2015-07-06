@@ -39,7 +39,7 @@ var TransactionStore = Reflux.createStore({
           if (rawTransaction.isRecurring) {
             options = RRule.parseString(rawTransaction.rrule);
 
-            // NOTE: dtstart is IGNORED! Do not use it!!
+            // NOTE: dtstart is IGNORED! Do not use it unless it is set here!!
             options.dtstart = new Date(rawTransaction.date);
 
             dates = new RRule(options).between(begin.toDate(), end.toDate(), true);
@@ -52,24 +52,27 @@ var TransactionStore = Reflux.createStore({
               var transaction = new Transaction(rawTransaction);
 
               transaction = transaction.withMutations(function(mutableTransaction) {
-                mutableTransaction.set("uniqueId", date.getTime() + mutableTransaction.id);
+                mutableTransaction.set("sortId", date.getTime() + "_" + rawTransaction.sortIndex + "_" + mutableTransaction.id);
                 mutableTransaction.set("date", date.toJSON());
                 mutableTransaction.set("rrule", null);
               });
 
               transactions.push(transaction);
             });
-
           } else {
             var date = new Date(rawTransaction.date);
             var transaction = new Transaction(rawTransaction);
 
             transaction = transaction.withMutations(function(mutableTransaction) {
-              mutableTransaction.set("uniqueId", date.getTime() + mutableTransaction.id);
+              mutableTransaction.set("sortId", date.getTime() + mutableTransaction.id);
             });
 
             transactions.push(transaction);
           }
+        });
+
+        transactions.sort(function(a, b) {
+          return a.sortId.localeCompare(b.sortId);
         });
 
         this.transactions = transactions;

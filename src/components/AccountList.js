@@ -45,7 +45,6 @@ var AccountList = React.createClass({
             <th>+/-</th>
           </tr>
           {accountRows}
-          <AddAccountForm/>
         </tbody>
       </table>
     );

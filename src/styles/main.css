@@ -16,3 +16,11 @@ html, body {
   border: #eee 2px solid;
   padding: 5px 10px;
 }
+
+td.dollar-amount {
+  text-align: right;
+}
+
+td.buttons {
+  text-align: center;
+}

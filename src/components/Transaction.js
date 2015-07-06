@@ -12,11 +12,12 @@ var Actions = require('actions/TransactionActions');
 var DollarView = require('components/DollarView');
 
 var Transaction = React.createClass({
-  removeTransaction: function() {
+  editTransaction: function() {
     if (this.props.data.id) {
-      Actions.removeTransaction(this.props.data.id);
+      // TODO
+      console.log("Editing is not yet implemented.");
     } else {
-      console.log("Can't delete! No ID found for transaction.");
+      console.log("Can't edit! No ID found for transaction.");
     }
   },
 
@@ -32,7 +33,7 @@ var Transaction = React.createClass({
 
     if (this.props.balance) {
       balanceCell = (
-        <td><DollarView amount={this.props.balance}/></td>
+        <td className="dollar-amount"><DollarView amount={this.props.balance}/></td>
       );
     }
 
@@ -40,11 +41,11 @@ var Transaction = React.createClass({
       <tr>
         <td>{moment(transaction.date).format('MMMM D, YYYY')}</td>
         <td>{transaction.label}</td>
-        <td><DollarView amount={transaction.amount} isNegative={this.props.isNegative}/></td>
+        <td className="dollar-amount"><DollarView amount={transaction.amount} isNegative={this.props.isNegative}/></td>
         <td><Link to="accountTransactions" params={{id: transaction.sourceAccountId}}>{sourceLabel}</Link></td>
         <td><Link to="accountTransactions" params={{id: transaction.destinationAccountId}}>{destinationLabel}</Link></td>
         {balanceCell}
-        <td><input type="button" value="-" onClick={this.removeTransaction}/></td>
+        <td className="buttons"><input type="button" value="Edit" onClick={this.editTransaction}/></td>
       </tr>
     );
   }
