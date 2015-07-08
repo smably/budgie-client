@@ -15,9 +15,7 @@ var AccountsView = React.createClass({
   mixins: [Reflux.connect(AccountStore, "accounts")],
 
   componentDidMount: function () {
-    if (!this.state.accounts) {
-      AccountActions.load();
-    }
+    AccountActions.load();
   },
 
   render: function() {

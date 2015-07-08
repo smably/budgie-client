@@ -19,13 +19,8 @@ var TransactionsView = React.createClass({
   ],
 
   componentDidMount: function () {
-    if (!this.state.accounts) {
       AccountActions.load();
-    }
-
-    if (!this.state.transactions) {
       TransactionActions.load();
-    }
   },
 
   render: function() {

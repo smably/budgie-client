@@ -33,23 +33,23 @@ var TransactionList = React.createClass({
     var transactionRows = [];
 
     if (this.props.transactions && this.props.transactions.size > 0) {
+      var sourceAccount, destinationAccount;
+
       if (hasBalance) {
-        var sourceAccount, destinationAccount;
         var accountBalance = 0;
         var isOutgoing = false;
-        var self = this;
 
         this.props.transactions.filter(
           function(transaction) {
-            return transaction.sourceAccountId === self.props.accountId ||
-              transaction.destinationAccountId === self.props.accountId;
-          }
+            return transaction.sourceAccountId === this.props.accountId ||
+              transaction.destinationAccountId === this.props.accountId;
+          }.bind(this)
         ).forEach(
           function(transaction) {
-            accountBalance = self.incrementAccountBalance(accountBalance, transaction);
-            isOutgoing = self.isOutgoing(transaction);
-            sourceAccount = self.props.accounts.get(transaction.sourceAccountId);
-            destinationAccount = self.props.accounts.get(transaction.destinationAccountId);
+            accountBalance = this.incrementAccountBalance(accountBalance, transaction);
+            isOutgoing = this.isOutgoing(transaction);
+            sourceAccount = this.props.accounts.get(transaction.sourceAccountId);
+            destinationAccount = this.props.accounts.get(transaction.destinationAccountId);
 
             transactionRows.push(
               <Transaction
@@ -61,14 +61,22 @@ var TransactionList = React.createClass({
                 isNegative={isOutgoing}
                 />
             );
-          }
+          }.bind(this)
         );
       } else {
         this.props.transactions.forEach(function(transaction) {
+          sourceAccount = this.props.accounts.get(transaction.sourceAccountId);
+          destinationAccount = this.props.accounts.get(transaction.destinationAccountId);
+
           transactionRows.push(
-            <Transaction key={transaction.sortId} data={transaction}/>
+            <Transaction
+              key={transaction.sortId}
+              data={transaction}
+              sourceAccount={sourceAccount}
+              destinationAccount={destinationAccount}
+              />
           );
-        });
+        }.bind(this));
       }
     }
 
