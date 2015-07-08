@@ -10,11 +10,12 @@ var Actions = require('actions/AccountActions');
 var DollarView = require('components/DollarView');
 
 var Account = React.createClass({
-  removeAccount: function() {
+  editAccount: function() {
     if (this.props.data.id) {
-      Actions.removeAccount(this.props.data.id);
+      // TODO
+      console.log("Editing is not yet implemented.");
     } else {
-      console.log("Can't delete! No ID found for account.");
+      console.log("Can't edit! No ID found for account.");
     }
   },
 
@@ -28,24 +29,27 @@ var Account = React.createClass({
       accountInfo = [
         <td key={account.id + "-institutionName"}>{account.institutionName}</td>,
         <td key={account.id + "-typeAndNumber"}>{account.type} {account.number}</td>,
-        <td key={account.id + "-balance"}><DollarView amount={account.balance}/></td>
       ];
     } else {
       accountInfo = [
-        <td key={account.id + "-noExtraInfo"} colSpan="3">n/a</td>
+        <td key={account.id + "-noExtraInfo"} colSpan="2"></td>
       ];
     }
+
+    var checkmark = (
+      <span className="glyphicon glyphicon-ok"></span>
+    );
 
     return (
       <tr>
         <td>
           <Link to="accountTransactions" params={{id: account.id}}>{account.label}</Link>
         </td>
-        <td>{account.isSource ? "x" : "-"}</td>
-        <td>{account.isDestination ? "x" : "-"}</td>
-        <td>{account.isPrimary ? "x" : "-"}</td>
+        <td className="boolean">{account.isSource ? checkmark : ""}</td>
+        <td className="boolean">{account.isDestination ? checkmark : ""}</td>
+        <td className="boolean">{account.isPrimary ? checkmark : ""}</td>
         {accountInfo}
-        <td><input type="button" value="-" onClick={this.removeAccount}/></td>
+        <td className="buttons"><button className="btn btn-xs btn-default" onClick={this.editAccount}>Edit</button></td>
       </tr>
     );
   }

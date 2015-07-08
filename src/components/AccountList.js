@@ -39,8 +39,7 @@ var AccountList = React.createClass({
             <th>Primary</th>
             <th>Institution Name</th>
             <th>Account</th>
-            <th>Balance</th>
-            <th>+/-</th>
+            <th></th>
           </tr>
           {accountRows}
         </tbody>
