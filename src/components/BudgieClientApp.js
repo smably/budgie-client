@@ -5,9 +5,6 @@ var React = require('react/addons');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
 
-require('normalize.css');
-require('styles/main.css');
-
 var BudgieClientApp = React.createClass({
   render: function() {
     return (

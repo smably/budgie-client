@@ -1,25 +1,12 @@
 'use strict';
 
 var React = require('react/addons');
-
 var Immutable = require('immutable');
 
 var Transaction = require('components/Transaction');
 var AddTransactionForm = require('components/AddTransactionForm');
 
 var TransactionList = React.createClass({
-  accountMap: null,
-
-  componentWillReceiveProps: function(newProps) {
-    if (newProps.accounts) {
-      this.accountMap = Immutable.Map().withMutations(function(mutableAccountMap) {
-        newProps.accounts.forEach(function(account) {
-          mutableAccountMap.set(account.id, account);
-        });
-      });
-    }
-  },
-
   renderTransactionHeader: function(hasBalance) {
     var balanceHeader;
 
@@ -45,7 +32,7 @@ var TransactionList = React.createClass({
   renderTransactionRows: function(hasBalance) {
     var transactionRows = [];
 
-    if (this.props.transactions && this.props.transactions.length > 0) {
+    if (this.props.transactions && this.props.transactions.size > 0) {
       if (hasBalance) {
         var sourceAccount, destinationAccount;
         var accountBalance = 0;
@@ -61,8 +48,8 @@ var TransactionList = React.createClass({
           function(transaction) {
             accountBalance = self.incrementAccountBalance(accountBalance, transaction);
             isOutgoing = self.isOutgoing(transaction);
-            sourceAccount = self.accountMap.get(transaction.sourceAccountId);
-            destinationAccount = self.accountMap.get(transaction.destinationAccountId);
+            sourceAccount = self.props.accounts.get(transaction.sourceAccountId);
+            destinationAccount = self.props.accounts.get(transaction.destinationAccountId);
 
             transactionRows.push(
               <Transaction

@@ -1,6 +1,7 @@
 'use strict';
 
 var Reflux = require('reflux');
+var Immutable = require('immutable');
 
 var Actions = require('actions/AccountActions');
 var Constants = require('constants/BaseConstants');
@@ -12,42 +13,45 @@ var prefix = require('superagent-prefix')(Constants.API_BASE);
 var AccountStore = Reflux.createStore({
   listenables: [Actions],
 
-  accounts: [],
+  accounts: null,
 
   init: function() {
     this.listenTo(Actions.load, this.fetchData);
   },
 
   fetchData: function() {
-    Ajax.get('/accounts')
-    .use(prefix)
-    .end(function(err, res) {
-      if (err) {
-        console.log("Error fetching:", err);
-      } else {
-        var rawAccounts = JSON.parse(res.text);
-        var accounts = [];
+    if (this.accounts === null) {
+      Ajax.get('/accounts')
+      .use(prefix)
+      .end(function(err, res) {
+        if (err) {
+          console.log("Error fetching:", err);
+        } else {
+          var rawAccounts = JSON.parse(res.text);
+          var accounts = Immutable.Map();
 
-        rawAccounts.map(function (account) {
-          accounts.push(new Account(account));
-        });
+          if (rawAccounts && rawAccounts.length > 0) {
+            accounts = accounts.withMutations(function(mutableAccounts) {
+              rawAccounts.forEach(function(account) {
+                mutableAccounts.set(account.id, account);
+              });
+            });
+          }
 
-        this.accounts = accounts;
-        this.trigger(this.accounts);
-      }
-    }.bind(this));
+          this.updateAccounts(accounts);
+        }
+      }.bind(this));
+    } else {
+      this.trigger(this.accounts);
+    }
   },
 
   onAddAccountSuccess: function(account) {
-    this.updateAccounts(this.accounts.concat([account]));
+    this.updateAccounts(this.accounts.set(account.id, account));
   },
 
   onRemoveAccountSuccess: function(accountId) {
-    var filteredAccounts = this.accounts.filter(function(account) {
-      return account.id !== accountId;
-    });
-
-    this.updateAccounts(filteredAccounts);
+    this.updateAccounts(this.accounts.delete(accountId));
   },
 
   updateAccounts: function(accounts) {

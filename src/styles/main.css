@@ -4,17 +4,29 @@ html, body {
   background: #fff;
 }
 
+body {
+  margin: 0 10px 30px 10px;
+}
+
+h1 {
+  display: none;
+}
+
 /* main */
 
 .main {
-  width: 80%;
-  margin: auto;
+  min-width: 1170px;
+  margin: 20px auto;
   color: #444;
 }
 
 .main th, .main td {
   border: #eee 2px solid;
   padding: 5px 10px;
+}
+
+.main tr:hover td {
+  background-color: #fafafa;
 }
 
 td.dollar-amount {

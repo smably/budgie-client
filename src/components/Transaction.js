@@ -45,7 +45,7 @@ var Transaction = React.createClass({
         <td><Link to="accountTransactions" params={{id: transaction.sourceAccountId}}>{sourceLabel}</Link></td>
         <td><Link to="accountTransactions" params={{id: transaction.destinationAccountId}}>{destinationLabel}</Link></td>
         {balanceCell}
-        <td className="buttons"><input type="button" value="Edit" onClick={this.editTransaction}/></td>
+        <td className="buttons"><button className="btn btn-xs btn-default" onClick={this.editTransaction}>Edit</button></td>
       </tr>
     );
   }

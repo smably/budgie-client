@@ -7,16 +7,14 @@ var AddAccountForm = require('components/AddAccountForm');
 
 var AccountList = React.createClass({
   renderAccountRows: function() {
-    var accountRows = [];
+    var accountRows;
 
-    console.log("in renderAccountRows, this.props.accounts=", this.props.accounts);
-
-    if (this.props.accounts && this.props.accounts.length > 0) {
-      this.props.accounts.forEach(function(account) {
-        accountRows.push(
+    if (this.props.accounts && this.props.accounts.size > 0) {
+      accountRows = this.props.accounts.toSet().map(function(account) {
+        return (
           <Account key={account.id} data={account}/>
         );
-      });
+      }).toArray();
     } else {
       accountRows = [
         <tr key="noAccountsFound">
