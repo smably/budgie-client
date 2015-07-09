@@ -25,7 +25,7 @@ var AccountStore = Reflux.createStore({
       .use(prefix)
       .end(function(err, res) {
         if (err) {
-          console.log("Error fetching:", err);
+          console.log("Error fetching accounts:", err);
         } else {
           var rawAccounts = JSON.parse(res.text);
           var accounts = Immutable.Map();
@@ -42,6 +42,7 @@ var AccountStore = Reflux.createStore({
         }
       }.bind(this));
     } else {
+      // Already fetched accounts
       this.trigger(this.accounts);
     }
   },

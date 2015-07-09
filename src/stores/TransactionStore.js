@@ -27,49 +27,74 @@ var TransactionStore = Reflux.createStore({
       .use(prefix)
       .end(function(err, res) {
         if (err) {
-          console.log("Error fetching transactions: ", err);
+          console.log("Error fetching transactions:", err);
         } else {
           var rawTransactions = JSON.parse(res.text);
           this.transactions = Immutable.Set();
 
           if (rawTransactions && rawTransactions.length > 0) {
-            rawTransactions.forEach(function (rawTransaction) {
-              if (rawTransaction.isRecurring) {
-                this.handleRecurringTransaction(rawTransaction);
-              } else {
-                this.handleSingleTransaction(rawTransaction);
-              }
-            }.bind(this));
+            this.handleTransactions(rawTransactions);
           }
 
-          this.transactions = this.transactions.sort(function(a, b) {
-            return a.sortId.localeCompare(b.sortId);
-          });
+          this.trigger(this.transactions);
         }
-
-        this.trigger(this.transactions);
       }.bind(this));
     } else {
+      // Already fetched transactions
       this.trigger(this.transactions);
     }
   },
 
+  handleTransactions: function(rawTransactions) {
+    if (rawTransactions && rawTransactions.length > 0) {
+      rawTransactions.forEach(function (rawTransaction) {
+        if (rawTransaction.isRecurring) {
+          this.handleRecurringTransaction(rawTransaction);
+        } else {
+          this.handleSingleTransaction(rawTransaction);
+        }
+      }.bind(this));
+    }
+
+    this.transactions = this.transactions.sort(function(a, b) {
+      return a.sortId.localeCompare(b.sortId);
+    });
+  },
+
   handleRecurringTransaction: function(rawTransaction) {
-    var options;
     var dates;
 
-    var begin = moment().startOf('day').subtract(1, 'years');
-    var end = moment().startOf('day').add(1, 'years');
+    var parseRawDate = function(rawDate) {
+      // slice(0, -1) strips the trailing Z off the date to make it a local time
+      return moment(rawDate.slice(0, -1)).toDate();
+    };
 
-    options = RRule.parseString(rawTransaction.rrule);
+    if (rawTransaction.rrule) {
+      var options = RRule.parseString(rawTransaction.rrule);
 
-    // NOTE: dtstart is IGNORED! Do not use it unless it is set here!!
-    options.dtstart = new Date(rawTransaction.date);
+      // NOTE: dtstart should NOT be defined within the rrule! It will be
+      // overridden here based on the date on the transaction.
+      options.dtstart = parseRawDate(rawTransaction.date);
 
-    dates = new RRule(options).between(begin.toDate(), end.toDate(), true);
+      var begin = moment().startOf('day').subtract(1, 'years').toDate();
+      var end = moment().startOf('day').add(1, 'years').toDate();
 
-    // TODO handle rdate and exdate
-    // Need to parse them into a list, add rdate entries, remove exdate entries
+      dates = new RRule(options).between(begin, end);
+    } else {
+      dates = [];
+    }
+
+    if (rawTransaction.rdate && rawTransaction.rdate.length > 0) {
+      dates = dates.concat(rawTransaction.rdate.map(parseRawDate));
+    }
+
+    if (rawTransaction.exdate && rawTransaction.exdate.length > 0) {
+      rawTransaction.exdate.map(parseRawDate).forEach(function(exdate) {
+        dates = dates.filter(function(date) {
+          return date.getTime() !== exdate.getTime();
+        });
+      });
+    }
 
     dates.forEach(function(date) {
       var transaction = new Transaction(rawTransaction).withMutations(
