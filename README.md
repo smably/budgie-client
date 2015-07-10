@@ -55,14 +55,14 @@ transaction happens at midnight at local time according to the browser in which
 the app is being viewed.
 
 Transactions that are part of a recurrence (including exceptional transactions
--- see 2.3) will have an icon displayed (`glyphicon-repeat`?) to indicate that
+-- see 2.4) will have an icon displayed (`glyphicon-repeat`?) to indicate that
 they are part of a recurrence.
 
 ### 2.2 Exclusions
 
 An `exdate` field will be stored on the transaction to specify a list of dates
 to exclude from the recurrence. `rdate` is not required as child transactions
-(see 2.2) can be used to add dates to a recurring transaction ad hoc.
+(see 2.3) can be used to add dates to a recurring transaction ad hoc.
 
 Instances of recurring transactions that match an `exdate` will have
 `isExcluded` set and will be hidden by default from the transaction list. A
@@ -159,41 +159,27 @@ parent.
 
 #### 2.6.3 Editing Recurring Transactions
 
-Editing the recurrence rule of a recurring transaction will warn if there are
-unreconciled exceptional transactions that would end up would end up outside
-the new recurrence rule. If possible, exceptional transactions should be moved
-automatically according to the following heuristic:
+Editing the recurrence rule of a recurring transaction will prompt if there are
+exceptional transactions that would end up would end up outside the new
+recurrence rule:
 
-1. Find the date of the last exceptional transaction of the recurring
-   transaction and call it _d<sub>e</sub>_.
-2. Find the last `exdate` of the recurring transaction and call it
-   _d<sub>x</sub>_.
-3. Take the later of _d<sub>e</sub>_ and _d<sub>x</sub>_ and call it
-   _d<sub>l</sub>_.
-4. Find the date of the first recurrence of the recurring transaction after
-   _d<sub>l</sub>_ and call it _d<sub>f<sub>_.
-5. Generate all dates for the recurring transaction between the reconciliation
-   date and _d<sub>f</sub>_, based on the old recurrence rule. Do note exclude
-   values based on `exdate`. Call this list of dates _d<sub>1</sub>_ to
-   _d<sub>n</sub>_.
-6. Generate the first _n_ dates in the new recurrence rule. Call them
-   _n<sub>1</sub>_ to _n<sub>n</sub>_.
-7. For _i_ = 1 up to _n_, check to see whether there is an entry in `exdate`
-   for _d<sub>i</sub>_. If so, move it to _n<sub>i</sub>_.
-8. For _i_ = 1 up to _n_, check to see whether there is a child transaction on
-   _d<sub>i</sub>_. If so, move it to _n<sub>i</sub>_.
-
-If there are child transactions outside the old recurrence pattern, the user
-should be prompted as follows:
-
-> Some instances of this recurring transaction have been modified. What do you
-> want to do with them?
+> Some instances of this recurring transaction have been modified. In order to
+> change the recurrence rule, the following modifications will be lost. What
+> would you like to do?
 >
->   (x) Leave them alone ( ) Remove them
+> Continue and reset any modified transactions / Cancel
+
+Likewise, if there are unreconciled child transactions that are not exceptional
+transactions, the user should be prompted as follows:
+
+> This recurring transaction has the following linked transactions. What would
+> you like to do with them?
+>
+> Leave them alone / Remove them / Cancel
 
 If the user selects the first option, some transactions may end up overlapping.
 
-#### 2.6.4 Duplication
+### 2.7 Duplication
 
 Each transaction will have a "Duplicate" button which will create a copy of the
 selected transaction. The user will be prompted to either create a linked copy
@@ -208,7 +194,7 @@ If the user chooses to create in independent copy, the new new transaction
 dialog will open, pre-filled with the values of the selected transaction and
 the `sortId` incremented by one.
 
-### 2.7 Deletion
+### 2.8 Deletion
 
 When deleting a transaction with children, if all children are exceptional
 transactions, they should all be deleted with the parent automatically. If
@@ -222,7 +208,7 @@ parent and all its children. If the user deletes a single instance of a
 recurring transaction (not a child transaction), an entry should be added to
 the `exdate` for the parent transaction on the date of the deleted transaction.
 
-### 2.8 Sorting
+### 2.9 Sorting
 
 The `sortIndex` field will determine the sort order for transactions on the
 same date. Recurring transactions will be able to define their sort order
