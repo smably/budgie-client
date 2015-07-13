@@ -9,15 +9,15 @@
 #### 1.1.1 Core Fields
 
 Core fields are fields that are essential to the financial integrity of the
-transaction. Core fields are `dtstart`, `amount`, `sourceAccountId`, and
+transaction. Core fields are `dtstart` (required), `amount`, `sourceAccountId`,
 `destinationAccountId`, and `sortIndex` (because it determines whether
 transactions happen in the correct order).
 
 #### 1.1.2 Metadata Fields
 
 Metadata fields are stored to optimize the display of the transaction or
-enhance human readability.  Metadata fields are `isReconciled`, `label`,
-`notes`, `colour`, and `tags`.
+enhance human readability.  Metadata fields are `isReconciled` (required),
+`label`, `notes`, `colour`, and `tags`.
 
 #### 1.1.3 Recurrence and Inheritance Fields
 
@@ -256,6 +256,39 @@ field.
 
 ## 4 UI Considerations
 
+### 4.1 Selection and Context Menu
+
 When a row is clicked, it will be highlighted (perhaps using a thick coloured
-border on one side) and considered selected. A menu will pop out to one side
-offering contextual options (Edit, Delete, Duplicate, Unlink, Revert).
+border on one side) and considered selected. A hamburger menu icon will appear
+in the coloured portion, and when clicked, a menu will pop out offering
+contextual options (Edit, Delete, Duplicate, Unlink, Revert).
+
+### 4.2 Recurrence Editor
+
+An "Add Recurrence" button will open a panel where the user can specify a
+recurrence rule.
+
+#### 4.2.1 Frequency
+
+Frequency will be able to be selected from the following options:
+
+* Daily
+* Weekly
+* Monthly
+* Yearly
+
+#### 4.2.2 Interval
+
+After selecting a frequency, the user will be presented with two options:
+"Every [unit]" or "Every ____ [units]", with a number picker.
+
+#### 4.2.3 Daily options
+
+If the frequency is daily, there are no other options. For weekday
+restrictions, frequency should be "weekly".
+
+#### 4.2.4 Weekly options
+
+#### 4.2.5 Monthly options
+
+#### 4.2.6 Yearly options

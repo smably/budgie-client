@@ -4,16 +4,18 @@ var Immutable = require('immutable');
 
 var AccountRecord = Immutable.Record({
   id: null,
+
+  // Required fields
   label: null,
   isSource: false,
   isDestination: false,
   isPrimary: false,
-  hasExtraInfo: false,
+
+  // Optional fields
   institutionName: null,
-  type: null,
-  number: null,
-  balance: 0,
-  balanceDate: null
+  accountType: null,
+  accountNumber: null,
+  initialBalance: 0
 });
 
 module.exports = AccountRecord;

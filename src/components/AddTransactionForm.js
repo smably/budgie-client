@@ -8,23 +8,7 @@ var TransactionRecord = require('records/TransactionRecord');
 
 var AddTransactionForm = React.createClass({
   getInitialState: function() {
-    return {
-      date: null,
-      isReconciled: false,
-      isRecurring: false,
-      rrule: null,
-      rdate: null,
-      exdate: null,
-      parentId: null,
-      sortIndex: 0,
-      amount: 0,
-      sourceAccountId: null,
-      destinationAccountId: null,
-      label: null,
-      notes: null,
-      colour: null,
-      tags: null
-    };
+    return new TransactionRecord().toJS();
   },
 
   updateTransaction: function(event) {
@@ -61,15 +45,29 @@ var AddTransactionForm = React.createClass({
     }
 
     return (
-      <tr>
-        <td><input placeholder="Date" name="date" value={this.state.date} onChange={this.updateTransaction}/></td>
-        <td><input placeholder="Label" name="label" value={this.state.label} onChange={this.updateTransaction}/></td>
-        <td><input placeholder="Amount" name="amount" value={this.state.amount} onChange={this.updateTransaction}/></td>
-        <td><input placeholder="From Account (ID)" name="sourceAccountId" value={this.state.sourceAccountId} onChange={this.updateTransaction}/></td>
-        <td><input placeholder="To Account (ID)" name="destinationAccountId" value={this.state.destinationAccountId} onChange={this.updateTransaction}/></td>
-        {balanceCell}
-        <td><input type="submit" value="+" onClick={this.addTransaction}/></td>
-      </tr>
+      <table><tbody>
+        <tr>
+          <td><input placeholder="Date" name="date" value={this.state.dtstart} onChange={this.updateTransaction}/></td>
+        </tr>
+        <tr>
+          <td><input placeholder="Label" name="label" value={this.state.label} onChange={this.updateTransaction}/></td>
+        </tr>
+        <tr>
+          <td><input placeholder="Amount" name="amount" value={this.state.amount} onChange={this.updateTransaction}/></td>
+        </tr>
+        <tr>
+          <td><input placeholder="From Account (ID)" name="sourceAccountId" value={this.state.sourceAccountId} onChange={this.updateTransaction}/></td>
+        </tr>
+        <tr>
+          <td><input placeholder="To Account (ID)" name="destinationAccountId" value={this.state.destinationAccountId} onChange={this.updateTransaction}/></td>
+        </tr>
+        <tr>
+          {balanceCell}
+        </tr>
+        <tr>
+          <td><input type="submit" value="+" onClick={this.addTransaction}/></td>
+        </tr>
+      </tbody></table>
     );
   }
 });

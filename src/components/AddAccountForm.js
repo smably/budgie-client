@@ -8,16 +8,7 @@ var AccountRecord = require('records/AccountRecord');
 
 var AddAccountForm = React.createClass({
   getInitialState: function() {
-    return {
-      label: null,
-      isSource: false,
-      isDestination: false,
-      isPrimary: false,
-      hasExtraInfo: false,
-      institutionName: null,
-      type: null,
-      number: null
-    };
+    return new AccountRecord().toJS();
   },
 
   updateAccount: function(event) {
@@ -57,19 +48,35 @@ var AddAccountForm = React.createClass({
 
   render: function() {
     return (
-      <tr>
-        <td><input placeholder="Label" name="label" value={this.state.label} onChange={this.updateAccount}/></td>
-        <td><input type="checkbox" name="isSource" checked={this.state.isSource} onChange={this.updateAccount}/></td>
-        <td><input type="checkbox" name="isDestination" checked={this.state.isDestination} onChange={this.updateAccount}/></td>
-        <td><input type="checkbox" name="isPrimary" checked={this.state.isPrimary} onChange={this.updateAccount}/></td>
-        <td><input placeholder="Institution Name" name="institutionName" value={this.state.institutionName} onChange={this.updateAccount}/></td>
-        <td>
-          <input placeholder="Account Type" name="type" value={this.state.type} onChange={this.updateAccount}/>
-          <input placeholder="Account Number" name="number" value={this.state.number} onChange={this.updateAccount}/>
-        </td>
-        <td>$0.00</td>
-        <td><input type="submit" value="+" onClick={this.addAccount}/></td>
-      </tr>
+      <table><tbody>
+        <tr>
+          <td><input placeholder="Label" name="label" value={this.state.label} onChange={this.updateAccount}/></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" name="isSource" checked={this.state.isSource} onChange={this.updateAccount}/></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" name="isDestination" checked={this.state.isDestination} onChange={this.updateAccount}/></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" name="isPrimary" checked={this.state.isPrimary} onChange={this.updateAccount}/></td>
+        </tr>
+        <tr>
+          <td><input placeholder="Institution Name" name="institutionName" value={this.state.institutionName} onChange={this.updateAccount}/></td>
+        </tr>
+        <tr>
+          <td>
+            <input placeholder="Account Type" name="type" value={this.state.type} onChange={this.updateAccount}/>
+            <input placeholder="Account Number" name="number" value={this.state.number} onChange={this.updateAccount}/>
+          </td>
+        </tr>
+        <tr>
+          <td>$0.00</td>
+        </tr>
+        <tr>
+          <td><input type="submit" value="+" onClick={this.addAccount}/></td>
+        </tr>
+      </tbody></table>
     );
   }
 });

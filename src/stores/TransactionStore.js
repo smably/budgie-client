@@ -48,7 +48,7 @@ var TransactionStore = Reflux.createStore({
   handleTransactions: function(rawTransactions) {
     if (rawTransactions && rawTransactions.length > 0) {
       rawTransactions.forEach(function (rawTransaction) {
-        if (rawTransaction.isRecurring) {
+        if (rawTransaction.rrule) {
           this.handleRecurringTransaction(rawTransaction);
         } else {
           this.handleSingleTransaction(rawTransaction);
@@ -73,7 +73,7 @@ var TransactionStore = Reflux.createStore({
       var options = RRule.parseString(rawTransaction.rrule);
 
       // NOTE: dtstart should NOT be defined within the rrule! It will be
-      // overridden here based on the date on the transaction.
+      // overridden here based on dtstart on the transaction.
       options.dtstart = parseRawDate(rawTransaction.date);
 
       var begin = moment().startOf('day').subtract(1, 'years').toDate();
@@ -99,7 +99,7 @@ var TransactionStore = Reflux.createStore({
     dates.forEach(function(date) {
       var transaction = new Transaction(rawTransaction).withMutations(
         function(mutatableTransaction) {
-          mutatableTransaction.set("date", date.toJSON());
+          mutatableTransaction.set("dtstart", date.toJSON());
           mutatableTransaction.set("rrule", null);
           mutatableTransaction.set("sortId", this.getSortId(mutatableTransaction, date));
         }.bind(this)
@@ -110,7 +110,14 @@ var TransactionStore = Reflux.createStore({
   },
 
   handleSimpleTransaction: function(rawTransaction) {
-    var date = new Date(rawTransaction.date);
+    // FIXME compatibility with old transactions
+    if (rawTransaction.date && !rawTransaction.dtstart) {
+      rawTransaction.dtstart = rawTransaction.date;
+      delete rawTransaction.date;
+    }
+
+    var date = new Date(rawTransaction.dtstart);
+
     var transaction = new Transaction(rawTransaction).set("sortId", this.getSortId(transaction, date));
 
     this.transactions = this.transactions.add(transaction);
@@ -121,7 +128,7 @@ var TransactionStore = Reflux.createStore({
   },
 
   onAddTransactionSuccess: function(rawTransaction) {
-    if (rawTransaction.isRecurring) {
+    if (rawTransaction.rrule) {
       this.handleRecurringTransaction(rawTransaction);
     } else {
       this.handleSimpleTransaction(rawTransaction);
