@@ -4,7 +4,7 @@ var React = require('react/addons');
 var Immutable = require('immutable');
 
 var Transaction = require('components/Transaction');
-var AddTransactionForm = require('components/AddTransactionForm');
+var TransactionModal = require('components/TransactionModal');
 
 var TransactionList = React.createClass({
   renderTransactionHeader: function(hasBalance) {
@@ -59,7 +59,9 @@ var TransactionList = React.createClass({
                 destinationAccount={destinationAccount}
                 balance={accountBalance}
                 isNegative={isOutgoing}
-                />
+                editCallback={ function() { this.props.editCallback(transaction); }.bind(this) }
+                deleteCallback={ function() { this.props.deleteCallback(transaction); }.bind(this) }
+              />
             );
           }.bind(this)
         );
@@ -74,7 +76,9 @@ var TransactionList = React.createClass({
               data={transaction}
               sourceAccount={sourceAccount}
               destinationAccount={destinationAccount}
-              />
+              editCallback={ function() { this.props.editCallback(transaction); }.bind(this) }
+              deleteCallback={ function() { this.props.deleteCallback(transaction); }.bind(this) }
+            />
           );
         }.bind(this));
       }

@@ -11,11 +11,14 @@ var DollarView = require('components/DollarView');
 
 var Transaction = React.createClass({
   editTransaction: function() {
-    if (this.props.data.id) {
-      // TODO
-      console.log("Editing is not yet implemented.");
-    } else {
-      console.log("Can't edit! No ID found for transaction.");
+    if (typeof this.props.editCallback === "function") {
+      this.props.editCallback();
+    }
+  },
+
+  deleteTransaction: function() {
+    if (typeof this.props.deleteCallback === "function") {
+      this.props.deleteCallback();
     }
   },
 
@@ -43,7 +46,10 @@ var Transaction = React.createClass({
         <td><Link to="accountTransactions" params={{id: transaction.sourceAccountId}}>{sourceLabel}</Link></td>
         <td><Link to="accountTransactions" params={{id: transaction.destinationAccountId}}>{destinationLabel}</Link></td>
         {balanceCell}
-        <td className="buttons"><button className="btn btn-xs btn-default" onClick={this.editTransaction}>Edit</button></td>
+        <td className="buttons">
+          <span className="glyphicon glyphicon-pencil" onClick={this.editTransaction}></span>
+          <span className="glyphicon glyphicon-remove" onClick={this.deleteTransaction}></span>
+        </td>
       </tr>
     );
   }
