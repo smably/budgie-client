@@ -27,11 +27,11 @@ var AccountForm = React.createClass({
     this.setState(changeset);
   },
 
-  addAccount: function() {
+  add: function() {
     Actions.addAccount(new AccountRecord(this.state));
   },
 
-  saveAccount: function() {
+  save: function() {
     Actions.modifyAccount(new AccountRecord(this.state));
   },
 

@@ -11,13 +11,13 @@ var DollarView = require('components/DollarView');
 
 var Account = React.createClass({
   editAccount: function() {
-    if (this.props.editCallback) {
+    if (typeof this.props.editCallback === "function") {
       this.props.editCallback();
     }
   },
 
   deleteAccount: function() {
-    if (this.props.deleteCallback) {
+    if (typeof this.props.deleteCallback === "function") {
       this.props.deleteCallback();
     }
   },

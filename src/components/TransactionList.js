@@ -4,7 +4,6 @@ var React = require('react/addons');
 var Immutable = require('immutable');
 
 var Transaction = require('components/Transaction');
-var TransactionModal = require('components/TransactionModal');
 
 var TransactionList = React.createClass({
   renderTransactionHeader: function(hasBalance) {
@@ -67,8 +66,10 @@ var TransactionList = React.createClass({
         );
       } else {
         this.props.transactions.forEach(function(transaction) {
-          sourceAccount = this.props.accounts.get(transaction.sourceAccountId);
-          destinationAccount = this.props.accounts.get(transaction.destinationAccountId);
+          if (this.props.accounts) {
+            sourceAccount = this.props.accounts.get(transaction.sourceAccountId);
+            destinationAccount = this.props.accounts.get(transaction.destinationAccountId);
+          }
 
           transactionRows.push(
             <Transaction

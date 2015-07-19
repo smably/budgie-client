@@ -4,15 +4,17 @@ var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
 var Button = require('react-bootstrap').Button;
+var Glyphicon = require('react-bootstrap').Glyphicon;
 var Link = Router.Link;
+
+var Constants = require('constants/BaseConstants');
 
 var AccountActions = require('actions/AccountActions');
 
 var AccountStore = require('stores/AccountStore');
 
 var AccountList = require('components/AccountList');
-var AccountModal = require('components/AccountModal');
-var DeleteAccountModal = require('components/DeleteAccountModal');
+var GenericModal = require('components/GenericModal');
 
 var AccountsView = React.createClass({
   mixins: [Reflux.connect(AccountStore, "accounts")],
@@ -21,31 +23,21 @@ var AccountsView = React.createClass({
     AccountActions.load();
   },
 
-  getInitialState: function() {
-    return { activeAccount: null };
-  },
-
-  updateActiveAccount: function(newActiveAccount) {
-    this.setState({ activeAccount: newActiveAccount });
-  },
-
-  resetActiveAccount: function() {
-    this.setState({ activeAccount: null });
-  },
-
   openAddAccountModal: function() {
-    this.resetActiveAccount();
+    this.refs.accountModal.updateAction(Constants.CRUD_ACTIONS.CREATE);
     this.refs.accountModal.open();
   },
 
   openEditAccountModal: function(account) {
-    this.updateActiveAccount(account);
+    this.refs.accountModal.updateAction(Constants.CRUD_ACTIONS.UPDATE);
+    this.refs.accountModal.updateActiveObject(account);
     this.refs.accountModal.open();
   },
 
   openDeleteAccountModal: function(account) {
-    this.updateActiveAccount(account);
-    this.refs.deleteAccountModal.open();
+    this.refs.accountModal.updateAction(Constants.CRUD_ACTIONS.DELETE);
+    this.refs.accountModal.updateActiveObject(account);
+    this.refs.accountModal.open();
   },
 
   render: function() {
@@ -54,7 +46,7 @@ var AccountsView = React.createClass({
         <h3>Accounts</h3>
 
         <Button bsStyle='primary' onClick={this.openAddAccountModal}>
-          <span className="glyphicon glyphicon-plus"></span> New Account
+          <Glyphicon glyph="plus"/> New Account
         </Button>
 
         <AccountList
@@ -65,8 +57,7 @@ var AccountsView = React.createClass({
 
         <Link to="transactions">All Transactions</Link>
 
-        <AccountModal ref='accountModal' account={this.state.activeAccount}/>
-        <DeleteAccountModal ref='deleteAccountModal' account={this.state.activeAccount}/>
+        <GenericModal ref='accountModal' objectType={Constants.OBJECT_TYPES.ACCOUNT}/>
       </div>
     );
   }

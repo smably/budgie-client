@@ -3,6 +3,7 @@
 var React = require('react/addons');
 var Reflux = require('reflux');
 var Button = require('react-bootstrap').Button;
+var Glyphicon = require('react-bootstrap').Glyphicon;
 var Link = require('react-router').Link;
 
 var Constants = require('constants/BaseConstants');
@@ -14,7 +15,7 @@ var AccountStore = require('stores/AccountStore');
 var TransactionStore = require('stores/TransactionStore');
 
 var TransactionList = require('components/TransactionList');
-var TransactionModal = require('components/TransactionModal');
+var GenericModal = require('components/GenericModal');
 
 var TransactionsView = React.createClass({
   mixins: [
@@ -34,21 +35,18 @@ var TransactionsView = React.createClass({
 
   openEditTransactionModal: function(transaction) {
     this.refs.transactionModal.updateAction(Constants.CRUD_ACTIONS.UPDATE);
-    this.refs.transactionModal.updateActiveTransaction(transaction);
+    this.refs.transactionModal.updateActiveObject(transaction);
     this.refs.transactionModal.open();
   },
 
   openDeleteTransactionModal: function(transaction) {
     this.refs.transactionModal.updateAction(Constants.CRUD_ACTIONS.DELETE);
-    this.refs.transactionModal.updateActiveTransaction(transaction);
+    this.refs.transactionModal.updateActiveObject(transaction);
     this.refs.transactionModal.open();
   },
 
   render: function() {
-    var transactionList;
-    var pageTitle = (
-      <h3>Transactions</h3>
-    );
+    var pageTitle;
 
     if (this.props.params.id && this.state.accounts) {
       var accountName = this.state.accounts.get(this.props.params.id).label;
@@ -56,31 +54,31 @@ var TransactionsView = React.createClass({
       pageTitle = (
         <h3>Transactions: {accountName}</h3>
       );
+    } else {
+      pageTitle = (
+        <h3>Transactions</h3>
+      );
     }
-
-    transactionList = (
-      <TransactionList
-        accountId={this.props.params.id}
-        accounts={this.state.accounts}
-        transactions={this.state.transactions}
-        editCallback={this.openEditTransactionModal}
-        deleteCallback={this.openDeleteTransactionModal}
-      />
-    );
 
     return (
       <div>
         {pageTitle}
 
         <Button bsStyle='primary' onClick={this.openAddTransactionModal}>
-          <span className="glyphicon glyphicon-plus"></span> New Transaction
+          <Glyphicon glyph="plus"/> New Transaction
         </Button>
 
-        {transactionList}
+        <TransactionList
+          accountId={this.props.params.id}
+          accounts={this.state.accounts}
+          transactions={this.state.transactions}
+          editCallback={this.openEditTransactionModal}
+          deleteCallback={this.openDeleteTransactionModal}
+        />
 
         <Link to="accounts">Back to Accounts</Link>
 
-        <TransactionModal ref='transactionModal'/>
+        <GenericModal ref='transactionModal' objectType={Constants.OBJECT_TYPES.TRANSACTION}/>
       </div>
     );
   }

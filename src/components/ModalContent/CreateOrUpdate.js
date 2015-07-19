@@ -7,16 +7,27 @@ var Button = require('react-bootstrap').Button;
 
 var Constants = require('constants/BaseConstants');
 
+var AccountForm = require('components/AccountForm');
 var TransactionForm = require('components/TransactionForm');
 
 var CreateOrUpdateContent = React.createClass({
+  save: function() {
+    this.refs.form.save();
+    this.props.closeCallback();
+  },
+
+  add: function() {
+    this.refs.form.add();
+    this.props.closeCallback();
+  },
+
   getHeader: function() {
     var headerTitle;
 
     if (this.props.action === Constants.CRUD_ACTIONS.UPDATE) {
-      headerTitle = "Edit Transaction";
+      headerTitle = this.props.objectType.EDIT_TEXT;
     } else {
-      headerTitle = "Add Transaction";
+      headerTitle = this.props.objectType.ADD_TEXT;
     }
 
     return (
@@ -27,15 +38,26 @@ var CreateOrUpdateContent = React.createClass({
   },
 
   getBody: function() {
-    var activeTransaction;
+    var form;
+    var activeObject;
 
     if (this.props.action === Constants.CRUD_ACTIONS.UPDATE) {
-      activeTransaction = this.props.activeTransaction;
+      activeObject = this.props.activeObject;
+    }
+
+    if (this.props.objectType === Constants.OBJECT_TYPES.ACCOUNT) {
+      form = (
+        <AccountForm ref="form" account={activeObject}/>
+      );
+    } else {
+      form = (
+        <TransactionForm ref="form" transaction={activeObject}/>
+      );
     }
 
     return (
       <Modal.Body>
-        <TransactionForm ref="transactionForm" transaction={activeTransaction}/>
+        {form}
       </Modal.Body>
     );
   },
@@ -45,11 +67,11 @@ var CreateOrUpdateContent = React.createClass({
     var primaryButtonText;
 
     if (this.props.action === Constants.CRUD_ACTIONS.UPDATE) {
-      primaryButtonFunction = this.props.updateCallback;
+      primaryButtonFunction = this.save;
       primaryButtonText = "Save";
     } else {
-      primaryButtonFunction = this.props.createCallback;
-      primaryButtonText = "Add Transaction";
+      primaryButtonFunction = this.add;
+      primaryButtonText = "Add";
     }
 
     return (
