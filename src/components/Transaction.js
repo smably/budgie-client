@@ -1,9 +1,7 @@
 'use strict';
 
 var React = require('react/addons');
-
 var moment = require('moment');
-
 var Router = require('react-router');
 var Link = Router.Link;
 

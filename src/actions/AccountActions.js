@@ -51,4 +51,23 @@ AccountActions.removeAccount.preEmit = function (accountId) {
   });
 };
 
+AccountActions.modifyAccount.preEmit = function (account) {
+  console.log("About to send out AJAX PUT request for", account.toJS());
+
+  Ajax.put('/accounts/' + account.get("id"))
+  .use(prefix)
+  .send(account.toJS())
+  .end(function (err, res) {
+    if (err) {
+      console.log("Account AJAX PUT failed:", err);
+      throw err;
+    } else {
+      console.log("Account AJAX PUT succeeded:", res);
+
+      AccountActions.modifyAccountSuccess(res.body);
+    }
+  });
+};
+
+
 module.exports = AccountActions;

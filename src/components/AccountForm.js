@@ -6,9 +6,9 @@ var Actions = require('actions/AccountActions');
 
 var AccountRecord = require('records/AccountRecord');
 
-var AddAccountForm = React.createClass({
+var AccountForm = React.createClass({
   getInitialState: function() {
-    return new AccountRecord().toJS();
+    return this.props.account ? this.props.account.toJS() : new AccountRecord().toJS();
   },
 
   updateAccount: function(event) {
@@ -24,61 +24,55 @@ var AddAccountForm = React.createClass({
     var changeset = {};
     changeset[key] = val;
 
-    this.setState(changeset, this.updateHasExtraInfo);
-  },
-
-  updateHasExtraInfo: function() {
-    var hasExtraInfo = false;
-    if (this.state.institutionName || this.state.type || this.state.number) {
-      hasExtraInfo = true;
-    }
-
-    this.setState({
-      hasExtraInfo: hasExtraInfo
-    });
+    this.setState(changeset);
   },
 
   addAccount: function() {
-    console.log(this.state);
+    Actions.addAccount(new AccountRecord(this.state));
+  },
 
-    var account = new AccountRecord(this.state);
-
-    Actions.addAccount(account);
+  saveAccount: function() {
+    Actions.modifyAccount(new AccountRecord(this.state));
   },
 
   render: function() {
     return (
       <table><tbody>
         <tr>
-          <td><input placeholder="Label" name="label" value={this.state.label} onChange={this.updateAccount}/></td>
+          <td>Label</td>
+          <td><input name="label" value={this.state.label} onChange={this.updateAccount}/></td>
         </tr>
         <tr>
+          <td>Source</td>
           <td><input type="checkbox" name="isSource" checked={this.state.isSource} onChange={this.updateAccount}/></td>
         </tr>
         <tr>
+          <td>Destination</td>
           <td><input type="checkbox" name="isDestination" checked={this.state.isDestination} onChange={this.updateAccount}/></td>
         </tr>
         <tr>
+          <td>Primary</td>
           <td><input type="checkbox" name="isPrimary" checked={this.state.isPrimary} onChange={this.updateAccount}/></td>
         </tr>
         <tr>
-          <td><input placeholder="Institution Name" name="institutionName" value={this.state.institutionName} onChange={this.updateAccount}/></td>
+          <td>Institution Name</td>
+          <td><input name="institutionName" value={this.state.institutionName} onChange={this.updateAccount}/></td>
         </tr>
         <tr>
-          <td>
-            <input placeholder="Account Type" name="type" value={this.state.type} onChange={this.updateAccount}/>
-            <input placeholder="Account Number" name="number" value={this.state.number} onChange={this.updateAccount}/>
-          </td>
+          <td>Account Type (e.g., checking, savings)</td>
+          <td><input name="accountType" value={this.state.accountType} onChange={this.updateAccount}/></td>
         </tr>
         <tr>
-          <td>$0.00</td>
+          <td>Account Number</td>
+          <td><input name="accountNumber" value={this.state.accountNumber} onChange={this.updateAccount}/></td>
         </tr>
         <tr>
-          <td><input type="submit" value="+" onClick={this.addAccount}/></td>
+          <td>Initial Balance</td>
+          <td><input name="initialBalance" value={this.state.initialBalance} onChange={this.updateAccount}/></td>
         </tr>
       </tbody></table>
     );
   }
 });
 
-module.exports = AddAccountForm;
+module.exports = AccountForm;

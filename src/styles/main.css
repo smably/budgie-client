@@ -44,3 +44,16 @@ td.dollar-amount {
 td.buttons {
   text-align: center;
 }
+
+td.buttons .glyphicon {
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+td.buttons .glyphicon-pencil {
+  color: #337ab7;
+}
+
+td.buttons .glyphicon-remove {
+  color: #C00;
+}

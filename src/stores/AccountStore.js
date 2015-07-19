@@ -32,8 +32,8 @@ var AccountStore = Reflux.createStore({
 
           if (rawAccounts && rawAccounts.length > 0) {
             accounts = accounts.withMutations(function(mutableAccounts) {
-              rawAccounts.forEach(function(account) {
-                mutableAccounts.set(account.id, account);
+              rawAccounts.forEach(function(rawAccount) {
+                mutableAccounts.set(rawAccount.id, new Account(rawAccount));
               });
             });
           }
@@ -47,12 +47,16 @@ var AccountStore = Reflux.createStore({
     }
   },
 
-  onAddAccountSuccess: function(account) {
-    this.updateAccounts(this.accounts.set(account.id, account));
+  onAddAccountSuccess: function(rawAccount) {
+    this.updateAccounts(this.accounts.set(rawAccount.id, new Account(rawAccount)));
   },
 
   onRemoveAccountSuccess: function(accountId) {
     this.updateAccounts(this.accounts.delete(accountId));
+  },
+
+  onModifyAccountSuccess: function(rawAccount) {
+    this.updateAccounts(this.accounts.set(rawAccount.id, new Account(rawAccount)));
   },
 
   updateAccounts: function(accounts) {
