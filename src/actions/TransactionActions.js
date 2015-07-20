@@ -17,7 +17,7 @@ var TransactionActions =  Reflux.createActions([
   'updateTransactionSuccess'
 ]);
 
-TransactionActions.addTransaction.preEmit = function (transaction) {
+TransactionActions.addTransaction.preEmit = function(transaction) {
   console.log("About to send out AJAX POST request for", transaction.toJS());
 
   Ajax.post('/transactions')
@@ -35,7 +35,7 @@ TransactionActions.addTransaction.preEmit = function (transaction) {
   });
 };
 
-TransactionActions.removeTransaction.preEmit = function (transactionId) {
+TransactionActions.removeTransaction.preEmit = function(transactionId) {
   console.log("About to send out AJAX DELETE request for", transactionId);
 
   Ajax.del('/transactions/' + transactionId)
@@ -47,6 +47,24 @@ TransactionActions.removeTransaction.preEmit = function (transactionId) {
       console.log("Transaction AJAX DELETE succeeded:", res);
 
       TransactionActions.removeTransactionSuccess(transactionId);
+    }
+  });
+};
+
+TransactionActions.updateTransaction.preEmit = function(transaction) {
+  console.log("About to send out AJAX PUT request for", transaction.toJS());
+
+  Ajax.put('/transactions/' + transaction.id)
+  .use(prefix)
+  .send(transaction.toJS())
+  .end(function (err, res) {
+    if (err) {
+      console.log("Transaction AJAX PUT failed:", err);
+      throw err;
+    } else {
+      console.log("Transaction AJAX PUT succeeded:", res);
+
+      TransactionActions.updateTransactionSuccess(res.body);
     }
   });
 };

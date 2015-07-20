@@ -13,11 +13,11 @@ var AccountActions = Reflux.createActions([
   'addAccountSuccess',
   'removeAccount',
   'removeAccountSuccess',
-  'modifyAccount',
-  'modifyAccountSuccess'
+  'updateAccount',
+  'updateAccountSuccess'
 ]);
 
-AccountActions.addAccount.preEmit = function (account) {
+AccountActions.addAccount.preEmit = function(account) {
   console.log("About to send out AJAX POST request for", account.toJS());
 
   Ajax.post('/accounts')
@@ -35,7 +35,7 @@ AccountActions.addAccount.preEmit = function (account) {
   });
 };
 
-AccountActions.removeAccount.preEmit = function (accountId) {
+AccountActions.removeAccount.preEmit = function(accountId) {
   console.log("About to send out AJAX DELETE request for", accountId);
 
   Ajax.del('/accounts/' + accountId)
@@ -51,7 +51,7 @@ AccountActions.removeAccount.preEmit = function (accountId) {
   });
 };
 
-AccountActions.modifyAccount.preEmit = function (account) {
+AccountActions.updateAccount.preEmit = function(account) {
   console.log("About to send out AJAX PUT request for", account.toJS());
 
   Ajax.put('/accounts/' + account.get("id"))
@@ -64,7 +64,7 @@ AccountActions.modifyAccount.preEmit = function (account) {
     } else {
       console.log("Account AJAX PUT succeeded:", res);
 
-      AccountActions.modifyAccountSuccess(res.body);
+      AccountActions.updateAccountSuccess(res.body);
     }
   });
 };

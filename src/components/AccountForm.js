@@ -32,7 +32,7 @@ var AccountForm = React.createClass({
   },
 
   save: function() {
-    Actions.modifyAccount(new AccountRecord(this.state));
+    Actions.updateAccount(new AccountRecord(this.state));
   },
 
   render: function() {

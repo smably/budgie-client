@@ -28,64 +28,56 @@ var TransactionList = React.createClass({
     );
   },
 
+  getTransactionRow: function(transaction, accountBalance) {
+    var sourceAccount, destinationAccount;
+
+    if (this.props.accounts) {
+      sourceAccount = this.props.accounts.get(transaction.sourceAccountId);
+      destinationAccount = this.props.accounts.get(transaction.destinationAccountId);
+    }
+
+    return (
+      <Transaction
+        key={transaction.id}
+        data={transaction}
+        sourceAccount={sourceAccount}
+        destinationAccount={destinationAccount}
+        balance={accountBalance}
+        isNegative={this.isOutgoing(transaction, sourceAccount, destinationAccount)}
+        editCallback={this.props.editCallback}
+        deleteCallback={this.props.deleteCallback}
+      />
+    );
+  },
+
   renderTransactionRows: function(hasBalance) {
     var transactionRows = [];
 
     if (this.props.transactions && this.props.transactions.size > 0) {
-      var sourceAccount, destinationAccount;
-
       if (hasBalance) {
         var accountBalance = 0;
         var isOutgoing = false;
 
-        this.props.transactions.filter(
+        transactionRows = this.props.transactions.filter(
           function(transaction) {
             return transaction.sourceAccountId === this.props.accountId ||
               transaction.destinationAccountId === this.props.accountId;
           }.bind(this)
-        ).forEach(
+        ).map(
           function(transaction) {
             accountBalance = this.incrementAccountBalance(accountBalance, transaction);
-            isOutgoing = this.isOutgoing(transaction);
-            sourceAccount = this.props.accounts.get(transaction.sourceAccountId);
-            destinationAccount = this.props.accounts.get(transaction.destinationAccountId);
 
-            transactionRows.push(
-              <Transaction
-                key={transaction.sortId}
-                data={transaction}
-                sourceAccount={sourceAccount}
-                destinationAccount={destinationAccount}
-                balance={accountBalance}
-                isNegative={isOutgoing}
-                editCallback={ function() { this.props.editCallback(transaction); }.bind(this) }
-                deleteCallback={ function() { this.props.deleteCallback(transaction); }.bind(this) }
-              />
-            );
+            return this.getTransactionRow(transaction, accountBalance);
           }.bind(this)
         );
       } else {
-        this.props.transactions.forEach(function(transaction) {
-          if (this.props.accounts) {
-            sourceAccount = this.props.accounts.get(transaction.sourceAccountId);
-            destinationAccount = this.props.accounts.get(transaction.destinationAccountId);
-          }
-
-          transactionRows.push(
-            <Transaction
-              key={transaction.sortId}
-              data={transaction}
-              sourceAccount={sourceAccount}
-              destinationAccount={destinationAccount}
-              editCallback={ function() { this.props.editCallback(transaction); }.bind(this) }
-              deleteCallback={ function() { this.props.deleteCallback(transaction); }.bind(this) }
-            />
-          );
+        transactionRows = this.props.transactions.map(function(transaction) {
+          return this.getTransactionRow(transaction);
         }.bind(this));
       }
     }
 
-    if (transactionRows.length === 0) {
+    if (transactionRows.size === 0) {
       transactionRows = (
         <tr>
           <td colSpan="7">No transactions found!</td>
@@ -97,19 +89,29 @@ var TransactionList = React.createClass({
   },
 
   incrementAccountBalance: function(accountBalance, transaction) {
-    var newBalance = accountBalance;
-
-    if (this.isOutgoing(transaction)) {
-      newBalance -= transaction.amount;
-    } else {
-      newBalance += transaction.amount;
-    }
-
-    return newBalance;
+    return this.isOutgoing(transaction) ?
+      accountBalance - transaction.amount :
+      accountBalance + transaction.amount;
   },
 
-  isOutgoing: function(transaction) {
-    return this.props.accountId === transaction.sourceAccountId;
+  isOutgoing: function(transaction, sourceAccount, destinationAccount) {
+    // If viewing transactions for an account, outgoing is determined based on
+    // the account being viewed.
+    if (this.props.accountId) {
+      return this.props.accountId === transaction.sourceAccountId;
+    }
+
+    // Transfers out of the primary account are always outgoing.
+    if (sourceAccount && sourceAccount.isPrimary) {
+      return true;
+    }
+
+    // If destination account doesn't exist, then we can't tell if the
+    // transaction is outgoing, so return false. If the destination account
+    // exists and is a source, then it's just a transfer among accounts. If not,
+    // then funds are leaving the system, so consider the transaction to be
+    // outgoing.
+    return (destinationAccount && !destinationAccount.isSource);
   },
 
   render: function() {

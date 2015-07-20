@@ -6,24 +6,25 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var Actions = require('actions/TransactionActions');
-
 var DollarView = require('components/DollarView');
+var TransactionStore = require('stores/TransactionStore');
 
 var Transaction = React.createClass({
   editTransaction: function() {
     if (typeof this.props.editCallback === "function") {
-      this.props.editCallback();
+      this.props.editCallback(TransactionStore.getById(this.props.data.transactionId));
     }
   },
 
   deleteTransaction: function() {
     if (typeof this.props.deleteCallback === "function") {
-      this.props.deleteCallback();
+      this.props.deleteCallback(TransactionStore.getById(this.props.data.transactionId));
     }
   },
 
   render: function() {
     var transaction = this.props.data;
+
     var balanceCell;
     var sourceLabel = this.props.sourceAccount ?
       this.props.sourceAccount.label :

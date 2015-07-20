@@ -36,8 +36,8 @@ transient. These fields are `sortId`, `isException`, `isExcluded`, and
 Required fields for accounts are `label`, `isSource`, `isDestination`, and
 `isPrimary`.
 
-Optional fields are `institutionName`, `accountType`, `accountNumber`, and
-`initialBalance`.
+Optional fields are `institutionName`, `accountType`, `accountNumber`,
+`reconciledDate`, `reconciledBalance`.
 
 
 ## 2 Transactions

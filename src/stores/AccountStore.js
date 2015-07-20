@@ -55,7 +55,7 @@ var AccountStore = Reflux.createStore({
     this.updateAccounts(this.accounts.delete(accountId));
   },
 
-  onModifyAccountSuccess: function(rawAccount) {
+  onUpdateAccountSuccess: function(rawAccount) {
     this.updateAccounts(this.accounts.set(rawAccount.id, new Account(rawAccount)));
   },
 

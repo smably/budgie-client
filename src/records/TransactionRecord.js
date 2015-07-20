@@ -23,12 +23,6 @@ var TransactionRecord = Immutable.Record({
   notes: null,
   colour: null,
   tags: null,
-
-  // Transient fields
-  sortId: null,
-  isException: false,
-  isExcluded: false,
-  recurrenceIndex: 0
 });
 
 module.exports = TransactionRecord;
