@@ -218,9 +218,9 @@ a block.
 Non-recurring transactions will be able to define their sort order relative to
 other non-recurring transactions on the specific date on which they occur.
 
-* 100 <= sortIndex < 200 means "above all non-recurring transactions"
-* 200 <= sortIndex < 300 is reserved for non-recurring transactions
-* 300 <= sortIndex < 400 means "below all non-recurring transactions"
+* 100 <= `sortIndex` < 200 means "above all non-recurring transactions"
+* 200 <= `sortIndex` < 300 is reserved for non-recurring transactions
+* 300 <= `sortIndex` < 400 means "below all non-recurring transactions"
 
 Numbers are between 100 and 400 for ease of sorting (no need to worry about
 zero padding) and understandability (just look at the first digit to determine
