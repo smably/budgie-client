@@ -39,8 +39,19 @@ var Transaction = React.createClass({
       );
     }
 
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var transactionTimeOffset = transaction.date.getTime() - today.getTime();
+
+    var transactionClass = "today";
+    if (transactionTimeOffset < 0) {
+      transactionClass = "before-today";
+    } else if (transactionTimeOffset > 0) {
+      transactionClass = "after-today";
+    }
+
     return (
-      <tr>
+      <tr className={transactionClass}>
         <td>{moment(transaction.date).format('MMMM D, YYYY')}</td>
         <td>{transaction.label}</td>
         <td className="dollar-amount"><DollarView amount={transaction.amount} isNegative={this.props.isNegative}/></td>

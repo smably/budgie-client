@@ -25,6 +25,18 @@ h1 {
   padding: 5px 10px;
 }
 
+tr.before-today {
+  border-left: #EEE 6px solid;
+}
+
+tr.today {
+  border-left: #48C 6px solid;
+}
+
+tr.after-today {
+  border-left: #888 6px solid;
+}
+
 td.boolean {
   text-align: center;
 }
